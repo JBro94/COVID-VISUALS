@@ -1,8 +1,14 @@
-path:hover {
+/* path:hover {
     fill-opacity: .85;
     stroke-opacity: .5;
     stroke: rgb(230, 100, 10)
+} */
+
+.data_visual:hover{
+   fill-opacity: .85;
+   fill: rgb(0, 155, 50);
 }
+
 .visuals{
    display: grid;
    grid-template-columns: auto auto;
