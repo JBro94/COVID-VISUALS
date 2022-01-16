@@ -5,7 +5,7 @@
 } */
 
 .data_visual:hover{
-   fill-opacity: .85;
+   fill-opacity: .5;
    fill: rgb(0, 155, 50);
 }
 
