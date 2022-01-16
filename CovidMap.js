@@ -1,5 +1,3 @@
-
-
 var width1 = 960;
 var height1 = 500;
 var popArray = [];
@@ -16,19 +14,6 @@ var projection = d3.geoAlbersUsa()
 // Define path generator
 var path = d3.geoPath()               // path generator that will convert GeoJSON to SVG paths
 		  	 .projection(projection);  // tell path generator to use albersUsa projection
-
-		
-// Define linear scale for output
-// var color = d3.scaleLinear()
-// 			  .range(["rgb(220,222,217)","rgb(269,73,68)","rgb(0,255,155)"]);
-
-// var legendText = ["States Lived", "States Visited", "No Data"];
-// var dataTip = d3.tip()
-//                 .offset([-5, 0])
-//                 .html(function(d){
-//                     return 
-//                 })
-
 
 //Create SVG element and append map to the SVG
 var svg = d3.select("#map")
