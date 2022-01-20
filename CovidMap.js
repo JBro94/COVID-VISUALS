@@ -71,10 +71,10 @@ svg.selectAll("path")
 	.enter()
 	.append("path")
 	.attr("d", path)
-	.style("stroke", "rgb(0,0,0)")
-	.style("stroke-width", "1")
-	.style("fill", function(d){return ramp(d.properties.popPercent)})
-	.attr("class", "vacc_visual");
+	.attr("class", "vacc_visual")
+	.style("stroke-width", ".15em")
+	.style("fill", function(d){return ramp(d.properties.popPercent)});
+	
 
 
 var key = d3.select("#map")
@@ -183,6 +183,11 @@ d3.csv("./StatePopData.csv", function(data){
                                  .attr("font-size", "15px");
 });
 
+d3.selectAll(".vacc_visual")
+	.on("mouseover", function(){
+		d3.selectAll(".vacc_visual").style("fill", "green")
+	});
+
 //Width and height of map
 var width2 = 960;
 var height2 = 500;
@@ -260,10 +265,9 @@ svg2.selectAll("path")
 	.enter()
 	.append("path")
 	.attr("d", states)
-	.style("stroke", "rgb(0,0,0)")
-	.style("stroke-width", "1")
-	.style("fill", function(d){return ramp2(d.properties.popCase)})
-	.attr("class", "case_visual");
+	.attr("class", "case_visual")
+	.style("stroke-width", ".15em")
+	.style("fill", function(d){return ramp2(d.properties.popCase)});
 
 
 var key2 = d3.select("#map2")

@@ -55,12 +55,19 @@ body {
    fill: rgb(255,0,255);
 } */
 
-.vacc_visual:hover{
-   fill:"green";
+.vacc_visual{
+   stroke: rgb(0,0,0);
+}
+
+.case_visual{
+   stroke:rgb(0,0,0);
 
 }
 
 .case_visual:hover{
-   fill:"green"
+   fill:rgb(0, 255, 0);
+}
 
+.vacc_visual:hover{
+   fill:rgb(0, 255, 0);
 }
