@@ -47,10 +47,20 @@ body {
    left: 800px;
    top: 1050px;
 }
-.vacc_rect:hover{
+/* .vacc_rect:hover{
    fill: rgb(15, 160, 95);
 }
 
 .case_rect:hover{
    fill: rgb(255,0,255);
+} */
+
+.vacc_visual:hover{
+   fill:"green";
+
+}
+
+.case_visual:hover{
+   fill:"green"
+
 }

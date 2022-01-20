@@ -73,7 +73,8 @@ svg.selectAll("path")
 	.attr("d", path)
 	.style("stroke", "rgb(0,0,0)")
 	.style("stroke-width", "1")
-	.style("fill", function(d){return ramp(d.properties.popPercent)});
+	.style("fill", function(d){return ramp(d.properties.popPercent)})
+	.attr("class", "vacc_visual");
 
 
 var key = d3.select("#map")
@@ -148,7 +149,7 @@ d3.csv("./StatePopData.csv", function(data){
     const barX = d3.scaleBand().domain(d3.range(data.length))
                                 .range([barMargin.left, barDisplayWidth - barMargin.left])
                                 .padding(.2);
-    const barY = d3.scaleLinear().domain([0, 100])
+    const barY = d3.scaleLinear().domain([0, 80])
                                   .range([barDisplayHeight - barMargin.top, barMargin.bottom]);
 
     barOneDisplay.append("g").attr("fill", "rgb(0, 0, 255)")
@@ -160,7 +161,7 @@ d3.csv("./StatePopData.csv", function(data){
                                  .attr("y", (d) => barY((d.Fully_Vaccinated/d.Population)*100))
                                  .attr("height", d => barY(0) - barY((d.Fully_Vaccinated/d.Population)*100))
                                  .attr("width", barX.bandwidth())
-                                 .attr("class", "vacc_rect");
+                                 .attr("class", "vacc_visual");
     barOneDisplay.selectAll("text")
                  .data(data.sort((a, b) => d3.descending((a.Fully_Vaccinated/a.Population)*100, (b.Fully_Vaccinated/b.Population)*100)))
                  .enter()
@@ -261,7 +262,8 @@ svg2.selectAll("path")
 	.attr("d", states)
 	.style("stroke", "rgb(0,0,0)")
 	.style("stroke-width", "1")
-	.style("fill", function(d){return ramp2(d.properties.popCase)});
+	.style("fill", function(d){return ramp2(d.properties.popCase)})
+	.attr("class", "case_visual");
 
 
 var key2 = d3.select("#map2")
@@ -326,7 +328,7 @@ const caseMargin = {top: 20, left: 30, right: 30, bottom: 30};
         const caseX = d3.scaleBand().domain(d3.range(data.length))
                                 .range([caseMargin.left, caseDisplayWidth - caseMargin.left])
                                 .padding(.2);
-        const caseY = d3.scaleLinear().domain([0, 100])
+        const caseY = d3.scaleLinear().domain([0, 30])
                                   .range([caseDisplayHeight - caseMargin.top, caseMargin.bottom]);
 
         barTwoDisplay.append("g").attr("fill", "rgb(255, 0, 0)")
@@ -338,7 +340,7 @@ const caseMargin = {top: 20, left: 30, right: 30, bottom: 30};
                                  .attr("y", (d) => caseY((d.Total_Cases/d.Population)*100))
                                  .attr("height", d => caseY(0) - caseY((d.Total_Cases/d.Population)*100))
                                  .attr("width", caseX.bandwidth())
-                                 .attr("class", "case_rect");
+                                 .attr("class", "case_visual");
 
         barTwoDisplay.selectAll("text")
                      .data(data.sort((a, b) => d3.descending((a.Total_Cases/a.Population)*100, (b.Total_Cases/b.Population)*100)))
