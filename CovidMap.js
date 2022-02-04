@@ -63,6 +63,12 @@ for (var i = 0; i < data.length; i++) {
 	}
 }
 
+// var toolTip = d3.tip().attr("class", "state-vaccine-tip").offset([-8, 0]).html((d)=>"State:" + d.name);
+// svgMap.call(toolTip);
+
+
+	// elements[0].style.stroke = "#0f0";
+
 
 
 // Bind the data to the SVG and create one path per GeoJSON feature
@@ -71,7 +77,8 @@ svgMap.selectAll("path")
 	.enter()
 	.append("path")
 	.attr("d", path)
-	.attr("class", function(d){return d.id})
+	.attr("class", (d) => d.id)
+	.attr("stroke", "#fff")
 	.style("stroke-width", ".05em")
 	.style("fill", function(d){return ramp(d.properties.popPercent)});
 
@@ -191,10 +198,6 @@ d3.csv("./StatePopData.csv", function(data){
                                  .attr("font-size", "15px");
 });
 
-d3.selectAll(".vacc_visual")
-	.on("mouseover", function(){
-		d3.selectAll(".vacc_visual").style("fill", "green")
-	});
 
 //Width and height of map
 var width2 = 960;
@@ -263,6 +266,13 @@ for (let i = 0; i < data.length; i++) {
 	}
 }
 
+function registerData(data){
+	document.getElementById("dataDisplay")
+			.getElementsByTagName("span")
+			.innerHTML = data.Fully_Vaccinated;
+
+}
+
 let averageCase = d3.mean(caseArray);
 console.log(averageCase)
 let std_case = d3.deviation(caseArray);
@@ -273,7 +283,8 @@ svg2.selectAll("path")
 	.enter()
 	.append("path")
 	.attr("d", states)
-	.attr("class", function(d){return d.id})
+	.attr("class", (d) => d.id)
+	.style("stroke", "#000")
 	.style("stroke-width", ".05em")
 	.style("fill", function(d){return ramp2(d.properties.popCase)});
 
@@ -389,5 +400,4 @@ const caseMargin = {top: 20, left: 30, right: 30, bottom: 30};
 const margin_line = { top: 30, right: 20, bottom: 20, left: 30 };
 var width3 = 960 - margin_line.left - margin_line.right;
 var height3 = 600 - margin_line.top - margin_line.bottom;
-
 
