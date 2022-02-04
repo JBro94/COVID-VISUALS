@@ -273,9 +273,19 @@ svg2.selectAll("path")
 	.enter()
 	.append("path")
 	.attr("d", states)
-	.attr("class", "case_visual")
-	.style("stroke-width", ".15em")
+	.attr("class", function(d){return d.id})
+	.style("stroke-width", ".05em")
 	.style("fill", function(d){return ramp2(d.properties.popCase)});
+
+svg2.append("g").attr("class", "stateId").selectAll("text").data(json.features).enter().append("svg:text").text(function(d){return d.id})
+										   .attr("x", function(d){
+											   return path.centroid(d)[0];
+										   })
+										   .attr("y", function(d){
+											   return path.centroid(d)[1];
+										   })
+										   .attr("text-anchor", "middle")
+										   .attr("fill", "#333");
 
 
 var key2 = d3.select("#map2")
@@ -352,7 +362,7 @@ const caseMargin = {top: 20, left: 30, right: 30, bottom: 30};
                                  .attr("y", (d) => caseY((d.Total_Cases/d.Population)*100))
                                  .attr("height", d => caseY(0) - caseY((d.Total_Cases/d.Population)*100))
                                  .attr("width", caseX.bandwidth())
-                                 .attr("class", "case_visual");
+                                 .attr("class", function(d){return d.ID});
 
         barTwoDisplay.selectAll("text")
                      .data(data.sort((a, b) => d3.descending((a.Total_Cases/a.Population)*100, (b.Total_Cases/b.Population)*100)))
