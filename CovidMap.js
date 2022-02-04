@@ -9,7 +9,7 @@ function popUpVacc(geography, data){
 // D3 Projection
 var projection = d3.geoAlbersUsa()
 				   .translate([width1/2, height1/2])    // translate to center of screen
-				   .scale([800]);          // scale things down so see entire US
+				   .scale([1000]);          // scale things down so see entire US
         
 // Define path generator
 var path = d3.geoPath()               // path generator that will convert GeoJSON to SVG paths
@@ -26,7 +26,7 @@ d3.csv("./StatePopData.csv", function(data) {
 //color.domain([0,1,2]); // setting the range of the input data
 
 for(let d = 0; d < data.length; d++){
-	popArray.push((parseInt(data[d].Fully_Vaccinated)/parseInt(data[d].Population))*100)
+	popArray.push((parseInt(data[d].Fully_Vaccinated_Month12)/parseInt(data[d].Population))*100)
 }
 var lowPopColor = "rgb(255, 255, 255)";
 var highPopColor = "rgb(0, 0, 255)";
@@ -46,7 +46,7 @@ for (var i = 0; i < data.length; i++) {
 	var dataState = data[i].State;
 
 	// Grab data value 
-	var dataValue = (parseInt(data[i].Fully_Vaccinated)/parseInt(data[i].Population))*100
+	var dataValue = (parseInt(data[i].Fully_Vaccinated_Month12)/parseInt(data[i].Population))*100
 
 	// Find the corresponding state inside the GeoJSON
 	for (let j = 0; j < json.features.length; j++)  {
@@ -62,14 +62,6 @@ for (var i = 0; i < data.length; i++) {
 		}
 	}
 }
-
-// var toolTip = d3.tip().attr("class", "state-vaccine-tip").offset([-8, 0]).html((d)=>"State:" + d.name);
-// svgMap.call(toolTip);
-
-
-	// elements[0].style.stroke = "#0f0";
-
-
 
 // Bind the data to the SVG and create one path per GeoJSON feature
 svgMap.selectAll("path")
@@ -91,6 +83,34 @@ svgMap.append("g").attr("class", "stateId").selectAll("text").data(json.features
 										   })
 										   .attr("text-anchor", "middle")
 										   .attr("fill", "#333");
+
+function changeStyle(){
+	let state = document.getElementsByClassName('CA');
+	state[0].style.fill = "#f00";
+	state[1].style.fill = "#f00";
+}
+function revertStyle(){
+	let state = document.getElementsByClassName('CA');
+	state[0].style.fill = ramp(dataValue);
+	state[1].style.fill = "rgb(0, 0, 255)";
+}
+// let al = document.getElementsByClassName("AL");
+// al[0].addEventListener('mouseover', changeStyle);
+// al[0].addEventListener('mouseout', revertStyle);
+
+// al[1].addEventListener('mouseover', changeStyle);
+// al[1].addEventListener('mouseout', revertStyle);
+
+let ca = document.getElementsByClassName("CA");
+ca[0].addEventListener('mouseover', changeStyle);
+ca[0].addEventListener('mouseout', revertStyle);
+
+ca[1].addEventListener('mouseover', changeStyle);
+ca[1].addEventListener('mouseout', revertStyle);
+
+// let ak = document.getElementsByClassName('AK');
+// ak[0].addEventListener('mouseover', changeStyle('AK'));
+// ak[0].addEventListener('mouseout', revertStyle('AK'));
 
 var key = d3.select("#map")
 			.append("svg")
@@ -154,11 +174,11 @@ var barOneDisplay = d3.select("#bar")
 d3.csv("./StatePopData.csv", function(data){
         data.forEach(d => {
             d.Population = parseInt(d.Population);
-            d.Fully_Vaccinated = parseInt(d.Fully_Vaccinated);
+            d.Fully_Vaccinated = parseInt(d.Fully_Vaccinated_Month12);
             d.Total_Cases = parseInt(d.Total_Cases);
         });
 
-    var maxVacc = d3.max(data, function(d) {return (+d.Fully_Vaccinated/(+d.Population)*100)});
+    var maxVacc = d3.max(data, function(d) {return (+d.Fully_Vaccinated_Month12/(+d.Population)*100)});
         //console.log(maxVacc);
         
     const barX = d3.scaleBand().domain(d3.range(data.length))
@@ -169,21 +189,21 @@ d3.csv("./StatePopData.csv", function(data){
 
     barOneDisplay.append("g").attr("fill", "rgb(0, 0, 255)")
                                  .selectAll("rect")
-                                 .data(data.sort((a,b)=> d3.descending((a.Fully_Vaccinated/a.Population)*100, (b.Fully_Vaccinated/b.Population)*100)))
+                                 .data(data.sort((a,b)=> d3.descending((a.Fully_Vaccinated_Month12/a.Population)*100, (b.Fully_Vaccinated_Month12/b.Population)*100)))
                                  .enter()
                                  .append("rect")
                                  .attr("x", (d, i) => barX(i))
-                                 .attr("y", (d) => barY((d.Fully_Vaccinated/d.Population)*100))
-                                 .attr("height", d => barY(0) - barY((d.Fully_Vaccinated/d.Population)*100))
+                                 .attr("y", (d) => barY((d.Fully_Vaccinated_Month12/d.Population)*100))
+                                 .attr("height", d => barY(0) - barY((d.Fully_Vaccinated_Month12/d.Population)*100))
                                  .attr("width", barX.bandwidth())
                                  .attr("class", function(d){return d.ID});
     barOneDisplay.selectAll("text")
-                 .data(data.sort((a, b) => d3.descending((a.Fully_Vaccinated/a.Population)*100, (b.Fully_Vaccinated/b.Population)*100)))
+                 .data(data.sort((a, b) => d3.descending((a.Fully_Vaccinated_Month12/a.Population)*100, (b.Fully_Vaccinated_Month12/b.Population)*100)))
                  .enter()
                  .append("text")
                  .attr("x", (d, i) => barX(i))
-                 .attr("y", (d) => barY((d.Fully_Vaccinated/d.Population)*100) - 3)
-                 .text((d) => parseInt((d.Fully_Vaccinated/d.Population)*100));
+                 .attr("y", (d) => barY((d.Fully_Vaccinated_Month12/d.Population)*100) - 3)
+                 .text((d) => parseInt((d.Fully_Vaccinated_Month12/d.Population)*100));
 
     barOneDisplay.append("g").attr("transform", `translate(0, ${barDisplayHeight - barMargin.bottom + 10})`)
                                  .call(d3.axisBottom(barX).tickFormat(i => data[i].State))
@@ -206,7 +226,7 @@ var height2 = 500;
 // D3 Projection
 var projection2 = d3.geoAlbersUsa()
 				   .translate([width2/2, height2/2])    // translate to center of screen
-				   .scale([800]);          // scale things down so see entire US
+				   .scale([1000]);          // scale things down so see entire US
         
 // Define path generator
 var states = d3.geoPath()               // path generator that will convert GeoJSON to SVG paths
@@ -229,7 +249,7 @@ d3.csv("./StatePopData.csv", function(data) {
 //color.domain([0,1,2]); // setting the range of the input data
 var caseArray = [];
 for(var d = 0; d < data.length; d++){
-	caseArray.push((parseInt(data[d].Total_Cases)/parseInt(data[d].Population))*100)
+	caseArray.push((parseInt(data[d].Total_Cases_Month12)/parseInt(data[d].Population))*100)
 }
 var lowCaseColor = "rgb(255, 255, 255)";
 var highCaseColor = "rgb(255, 0, 0)";
@@ -249,7 +269,7 @@ for (let i = 0; i < data.length; i++) {
 	let dataState = data[i].State;
 
 	// Grab data value 
-	let dataValue = (parseInt(data[i].Total_Cases)/parseInt(data[i].Population))*100
+	let dataValue = (parseInt(data[i].Total_Cases_Month12)/parseInt(data[i].Population))*100
 
 	// Find the corresponding state inside the GeoJSON
 	for (let j = 0; j < json.features.length; j++)  {
@@ -348,40 +368,38 @@ const caseMargin = {top: 20, left: 30, right: 30, bottom: 30};
                 .attr("viewBox", [0, 0, caseDisplayWidth, caseDisplayHeight + 350]);
     
 
-    d3.csv("./StatePopData.csv", function(data){
+d3.csv("./StatePopData.csv", function(data){
         data.forEach(d => {
             d.Population = parseInt(d.Population);
-            d.Fully_Vaccinated = parseInt(d.Fully_Vaccinated);
-            d.Total_Cases = parseInt(d.Total_Cases);
+            d.Fully_Vaccinated = parseInt(d.Fully_Vaccinated_Month12);
+            d.Total_Cases = parseInt(d.Total_Cases_Month12);
         });
 
-        var maxCaseNum = d3.max(data, function(d) {return (+d.Total_Cases/(+d.Population)*100)});
-        //console.log(maxVacc);
         
         const caseX = d3.scaleBand().domain(d3.range(data.length))
                                 .range([caseMargin.left, caseDisplayWidth - caseMargin.left])
                                 .padding(.2);
-        const caseY = d3.scaleLinear().domain([0, 30])
+        const caseY = d3.scaleLinear().domain([0, 28])
                                   .range([caseDisplayHeight - caseMargin.top, caseMargin.bottom]);
 
         barTwoDisplay.append("g").attr("fill", "rgb(255, 0, 0)")
                                  .selectAll("rect")
-                                 .data(data.sort((a,b)=> d3.descending((a.Total_Cases/a.Population)*100, (b.Total_Cases/b.Population)*100)))
+                                 .data(data.sort((a,b)=> d3.descending((a.Total_Cases_Month12/a.Population)*100, (b.Total_Cases_Month12/b.Population)*100)))
                                  .enter()
                                  .append("rect")
                                  .attr("x", (d, i) => caseX(i))
-                                 .attr("y", (d) => caseY((d.Total_Cases/d.Population)*100))
-                                 .attr("height", d => caseY(0) - caseY((d.Total_Cases/d.Population)*100))
+                                 .attr("y", (d) => caseY((d.Total_Cases_Month12/d.Population)*100))
+                                 .attr("height", d => caseY(0) - caseY((d.Total_Cases_Month12/d.Population)*100))
                                  .attr("width", caseX.bandwidth())
                                  .attr("class", function(d){return d.ID});
 
         barTwoDisplay.selectAll("text")
-                     .data(data.sort((a, b) => d3.descending((a.Total_Cases/a.Population)*100, (b.Total_Cases/b.Population)*100)))
+                     .data(data.sort((a, b) => d3.descending((a.Total_Cases_Month12/a.Population)*100, (b.Total_Cases_Month12/b.Population)*100)))
                      .enter()
                      .append("text")
                      .attr("x", (d, i) => caseX(i))
-                     .attr("y", (d) => caseY((d.Total_Cases/d.Population)*100) - 3)
-                     .text((d) => parseInt((d.Total_Cases/d.Population)*100));
+                     .attr("y", (d) => caseY((d.Total_Cases_Month12/d.Population)*100) - 3)
+                     .text((d) => parseInt((d.Total_Cases_Month12/d.Population)*100));
 
         barTwoDisplay.append("g").attr("transform", `translate(0, ${caseDisplayHeight - caseMargin.bottom + 10})`)
                                  .call(d3.axisBottom(caseX).tickFormat(i => data[i].State))
