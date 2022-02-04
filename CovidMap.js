@@ -16,7 +16,7 @@ var path = d3.geoPath()               // path generator that will convert GeoJSO
 		  	 .projection(projection);  // tell path generator to use albersUsa projection
 
 //Create SVG element and append map to the SVG
-var svg = d3.select("#map")
+var svgMap = d3.select("#map")
 			.append("svg")
 			.attr("width", width1)
 			.attr("height", height1);
@@ -66,16 +66,24 @@ for (var i = 0; i < data.length; i++) {
 
 
 // Bind the data to the SVG and create one path per GeoJSON feature
-svg.selectAll("path")
+svgMap.selectAll("path")
 	.data(json.features)
 	.enter()
 	.append("path")
 	.attr("d", path)
-	.attr("class", "vacc_visual")
-	.style("stroke-width", ".15em")
+	.attr("class", function(d){return d.id})
+	.style("stroke-width", ".05em")
 	.style("fill", function(d){return ramp(d.properties.popPercent)});
-	
 
+svgMap.append("g").attr("class", "stateId").selectAll("text").data(json.features).enter().append("svg:text").text(function(d){return d.id})
+										   .attr("x", function(d){
+											   return path.centroid(d)[0];
+										   })
+										   .attr("y", function(d){
+											   return path.centroid(d)[1];
+										   })
+										   .attr("text-anchor", "middle")
+										   .attr("fill", "#333");
 
 var key = d3.select("#map")
 			.append("svg")
@@ -108,7 +116,7 @@ var legend = key.append("defs")
 	   .style("fill", "url(#gradient)")
 	   .attr("transform", "translate(0,20)");
 	
-	var y = d3.scaleLinear().range([120, 10]).domain([minPop, maxPop]);
+	var y = d3.scaleLinear().range([120, 10]).domain([0, 100]);
 	var yAxis = d3.axisRight(y);
 
 	key.append("g").attr("class", "y axis").attr("transform", "translate(41,10)").call(yAxis)
@@ -161,7 +169,7 @@ d3.csv("./StatePopData.csv", function(data){
                                  .attr("y", (d) => barY((d.Fully_Vaccinated/d.Population)*100))
                                  .attr("height", d => barY(0) - barY((d.Fully_Vaccinated/d.Population)*100))
                                  .attr("width", barX.bandwidth())
-                                 .attr("class", "vacc_visual");
+                                 .attr("class", function(d){return d.ID});
     barOneDisplay.selectAll("text")
                  .data(data.sort((a, b) => d3.descending((a.Fully_Vaccinated/a.Population)*100, (b.Fully_Vaccinated/b.Population)*100)))
                  .enter()
