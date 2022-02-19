@@ -24,10 +24,8 @@ h1{
 
 #dataDisplay{
    text-align: center;
-   position: relative;
-   width: 40%;
-   height: 300px;
-   border: #000 solid;
+   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+   font-size: large;
 }
 
 path{

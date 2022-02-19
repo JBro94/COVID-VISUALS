@@ -50,7 +50,8 @@ for (var i = 0; i < data.length; i++) {
 	var dataState = data[i].State;
 
 	// Grab data value 
-	var dataValue = (parseInt(data[i].Fully_Vaccinated_Month12)/parseInt(data[i].Population))*100
+	var dataValue = Math.floor((parseInt(data[i].Fully_Vaccinated_Month12)/parseInt(data[i].Population))*100)
+	var caseData = parseInt(data[i].Total_Cases_Month12)
 
 	// Find the corresponding state inside the GeoJSON
 	for (let j = 0; j < json.features.length; j++)  {
@@ -59,7 +60,8 @@ for (var i = 0; i < data.length; i++) {
 		if (dataState == jsonState) {
 
 		// Copy the data value into the JSON
-		json.features[j].properties.popPercent = dataValue; 
+		json.features[j].properties.popPercent = dataValue;
+		json.features[j].properties.caseNumber = caseData;
 
 		// Stop looking through the JSON
 		break;
@@ -78,11 +80,17 @@ svgMap.selectAll("path")
 	.attr("stroke", "#005")
 	.style("stroke-width", ".05em")
 	.style("fill", function(d){return ramp(d.properties.popPercent)})
-	.on("mouseover", function(d){d3.selectAll("." + d.id).style("fill", "#ff0")})
+	.on("mouseover", function(d){
+		d3.selectAll("." + d.id).style("fill", "#ff0")
+		d3.selectAll('#'+ d.id + 'caseNumber').style('fill', '#000')
+		document.getElementById('dataDisplay').innerHTML = d.id + ": % of Population Vaccinated: " + d.properties.popPercent + "%, Cases: " + d.properties.caseNumber;
+	})
 	.on("mouseout", function(d){
 		d3.selectAll("#" + d.id + 'stateVacc').style("fill", function(d){return ramp(d.properties.popPercent)})
 		d3.selectAll('#' + d.id + 'barVacc').style('fill', '#00f')
+		d3.selectAll('#'+ d.id + 'caseNumber').style('fill', '#fff')
 	});
+
 
 svgMap.append("g").attr("class", "stateId").selectAll("text").data(json.features).enter().append("svg:text").text(function(d){return d.id})
 										   .attr("x", function(d){
@@ -167,10 +175,15 @@ var barOneDisplay = d3.select("#bar")
                                  .attr("width", barX.bandwidth())
                                  .attr("class", function(d){return d.ID})
 								 .attr('id', (d) => d.ID + 'barVacc')
-								 .on("mouseover", function(d){d3.selectAll("."+d.ID).style("fill", "#ff0")})
+								 .on("mouseover", function(d){
+									 d3.selectAll("."+d.ID).style("fill", "#ff0")
+									 d3.selectAll('#'+d.ID + 'caseNumber').style('fill', '#000')
+									 document.getElementById('dataDisplay').innerHTML = d.ID + ": % of Population Vaccinated: " + Math.floor((d.Fully_Vaccinated_Month12/d.Population)*100) + "%, Cases: " + d.Total_Cases_Month12;
+									})
 								 .on("mouseout", function(d){
 									 d3.selectAll("#"+d.ID +'barVacc').style("fill", "#00f")
 									 d3.selectAll('#'+d.ID +'stateVacc').style('fill', function(d){return ramp(d.properties.popPercent)})
+									 d3.selectAll("#"+d.ID + 'caseNumber').style('fill', "#fff")
 								});
 	
     barOneDisplay.append('g').selectAll("text")
@@ -201,6 +214,7 @@ var barOneDisplay = d3.select("#bar")
  				 .append("text")
  				 .attr("x", (d, i) => barX(i))
  				 .attr("y", (d) => barY((d.Total_Cases_Month12/d.Population)*100) - 3)
+				 .attr('id', (d) => d.ID + 'caseNumber')
  				 .text((d) => parseInt((d.Total_Cases_Month12/d.Population)*100))
 				 .style('fill', '#fff');
 
@@ -217,31 +231,71 @@ var barOneDisplay = d3.select("#bar")
                                  .attr("font-size", "15px");
 });
 
-const lineMargin = {top: 25,
-					right: 45,
-					bottom: 50,
-					left: 25
-				};
-let line_width = 956;
-let line_height = 415;
+// const lineMargin = {top: 25,
+// 					right: 45,
+// 					bottom: 50,
+// 					left: 25
+// 				};
+// let line_width = 956;
+// let line_height = 415;
 
-let lineDisplay = d3.select('#info').append('svg').attr('height', line_height).attr('width', line_width);
+// let lineDisplay = d3.select('#info').append('svg').attr('height', line_height).attr('width', line_width);
 
-lineDisplay.append('g').attr('transform', 'translate(' + lineMargin.left + ', ' + lineMargin.top + ')');
+// lineDisplay.append('g').attr('transform', 'translate(' + lineMargin.left + ', ' + lineMargin.top + ')');
 
-let dataArray = [];
+// let dataArray = [];
 
-d3.csv("./COVIDTEST.csv", function(data) {
+// d3.csv("./COVIDTEST.csv", function(data) {
 
-	for(let i = 0; i < data.length; i++){
-		data[i].Date = d3.timeParse("%m/%d/%Y")(data[i].Date),
-        data[i].Vaccines = parseInt(data[i].Vaccines),
-        data[i].Cases = parseInt(data[i].Cases),
-        data[i].State = data[i].State
-	}
-	console.log(data);
+// 	for(let i = 0; i < data.length; i++){
+// 		data[i].Date = d3.timeParse("%m/%d/%Y")(data[i].Date),
+//         data[i].Vaccines = parseInt(data[i].Vaccines),
+//         data[i].Cases = parseInt(data[i].Cases),
+//         data[i].State = data[i].State
+// 	}
+// 	lineDisplay.append("text")
+//                 .attr("y", lineMargin.top - 10)
+//                 .attr("x", (line_width / 3))
+//                 .attr("dy", "1em")
+//                 .attr("text-anchor", "middle")
+//                 .text("Avg Number of  ");
+// 	lineDisplay.append("text")
+//                 .attr("y", lineMargin.top - 10)
+//                 .attr("x", (line_width / 3) + 70)
+//                 .attr("dy", "1em")
+//                 .attr("text-anchor", "middle")
+//                 .text(" Cases ")
+//                 .style("fill", 'red');
+//     lineDisplay.append("text")
+//                 .attr("y", lineMargin.top - 10)
+//                 .attr("x", (line_width / 3) + 100)
+//                 .attr("dy", "1em")
+//                 .attr("text-anchor", "middle")
+//                 .text(" vs. ");
+//     lineDisplay.append("text")
+//                 .attr("y", lineMargin.top - 10)
+//                 .attr("x", (line_width / 2) + 25)
+//                 .attr("dy", "1em")
+//                 .attr("text-anchor", "middle")
+//                 .text("Vaccines Administered")
+//                 .style("fill", 'blue');
+
+// 	lineDisplay.append("text")
+//                 .attr("y", lineMargin.top - 50)
+//                 .attr("x", (line_width / 3))
+//                 .attr("dy", "1em")
+//                 .attr("text-anchor", "middle")
+//                 .text("United States, D.C. and Puerto Rico");
+
+// 	let dataArr = data.sort((a, b) => b.Date - a.Date).reverse();
+// 	console.log(dataArr);
+
+
 	
-});
+	
+	
+	
+// });
 
 
 
