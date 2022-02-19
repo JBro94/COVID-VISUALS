@@ -4,11 +4,20 @@
    fill: rgb(0, 155, 50);
 } */
 
+body{
+   background-color: #454;
+}
+
+h1{
+   background-color: #454;
+   color: #fff;
+}
+
 .visuals{
    display: grid;
    grid-template-columns: auto auto;
    padding: 10px;
-   background-color: rgb(255, 255, 255);
+   background-color: #454;
    width: 100%;
 }
 div.tooltip {   
@@ -25,10 +34,6 @@ div.tooltip {
 }
        
 /* Legend Font Style */
-body {
-   font: 11px sans-serif;
-   background-color: rgb(255, 255, 255);
-}
        
 /* Legend Position Style */
 .legend1 {
@@ -51,7 +56,29 @@ body {
    border: #000 solid;
 }
 
-/* .AL:hover{
-   stroke: #f04;
-   stroke-width: 4px;
-} */
+path{
+   pointer-events: all;
+}
+#map{
+   max-height: fit-content;
+}
+#bar{
+   background-color: #fff;
+   border-radius: .5em;
+   border: #454 1em solid;
+}
+.mainDiv{
+   background-color: #fff;
+   border-radius: .5em;
+   border: #454 1em solid;
+   display: flex;
+}
+#info{
+   background-color: #fff;
+   position: absolute;
+   top: 640px;
+   width: 956px;
+   height: 415px;
+   border: #446 .15em dashed;
+}
+
