@@ -1,15 +1,10 @@
 
-/* .data_visual:hover{
-   fill-opacity: .5;
-   fill: rgb(0, 155, 50);
-} */
-
 body{
    background-color: #454;
 }
 
 h1{
-   background-color: #454;
+   background-color: #464;
    color: #fff;
 }
 
@@ -20,32 +15,11 @@ h1{
    background-color: #454;
    width: 100%;
 }
-div.tooltip {   
-   position: absolute;           
-   text-align: center;           
-   width: 60px;                  
-   height: 28px;                 
-   padding: 2px;             
-   font: 12px sans-serif;        
-   background: white;   
-   border: 0px;      
-   border-radius: 8px;           
-   pointer-events: none;         
-}
-       
-/* Legend Font Style */
-       
-/* Legend Position Style */
+ 
 .legend1 {
    position: absolute;
    left:800px;
    top:350px;
-}
-
-.legend2 {
-   position: absolute;
-   left: 800px;
-   top: 1050px;
 }
 
 #dataDisplay{
@@ -81,4 +55,6 @@ path{
    height: 415px;
    border: #446 .15em dashed;
 }
+
+
 
