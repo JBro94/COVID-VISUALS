@@ -83,7 +83,7 @@ svgMap.selectAll("path")
 	.on("mouseover", function(d){
 		d3.selectAll("." + d.id).style("fill", "#ff0")
 		d3.selectAll('#'+ d.id + 'caseNumber').style('fill', '#000')
-		document.getElementById('dataDisplay').innerHTML = d.id + ": % of Population Vaccinated: " + d.properties.popPercent + "%, Cases: " + d.properties.caseNumber;
+		document.getElementById('dataDisplay').innerHTML = d.properties.name + ": % of Population Vaccinated: " + d.properties.popPercent + "%, Cases: " + d.properties.caseNumber;
 	})
 	.on("mouseout", function(d){
 		d3.selectAll("#" + d.id + 'stateVacc').style("fill", function(d){return ramp(d.properties.popPercent)})
@@ -178,7 +178,7 @@ var barOneDisplay = d3.select("#bar")
 								 .on("mouseover", function(d){
 									 d3.selectAll("."+d.ID).style("fill", "#ff0")
 									 d3.selectAll('#'+d.ID + 'caseNumber').style('fill', '#000')
-									 document.getElementById('dataDisplay').innerHTML = d.ID + ": % of Population Vaccinated: " + Math.floor((d.Fully_Vaccinated_Month12/d.Population)*100) + "%, Cases: " + d.Total_Cases_Month12;
+									 document.getElementById('dataDisplay').innerHTML = d.State + ": % of Population Vaccinated: " + Math.floor((d.Fully_Vaccinated_Month12/d.Population)*100) + "%, Cases: " + d.Total_Cases_Month12;
 									})
 								 .on("mouseout", function(d){
 									 d3.selectAll("#"+d.ID +'barVacc').style("fill", "#00f")
@@ -205,7 +205,10 @@ var barOneDisplay = d3.select("#bar")
 				 .attr("width", barX.bandwidth())
 				 .attr("class", function(d){return d.ID + 'barCase'})
 				 .attr('id', (d) => d.ID + 'barCase')
-				 .on("mouseover", function(d){d3.selectAll("."+d.ID + 'barCase').style("fill", "#ff0")})
+				 .on("mouseover", function(d){
+					 d3.selectAll("."+d.ID + 'barCase').style("fill", "#ff0")
+					 document.getElementById('dataDisplay').innerHTML = d.State + ": % of Population Vaccinated: " + Math.floor((d.Fully_Vaccinated_Month12/d.Population)*100) + "%, Cases: " + d.Total_Cases_Month12;
+					})
 				 .on("mouseout", function(d){d3.selectAll("."+d.ID + 'barCase').style("fill", "#f00")});
 
 	barOneDisplay.append('g').selectAll("text")

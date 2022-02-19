@@ -1,10 +1,10 @@
 
 body{
-   background-color: #454;
+   background-color: #544;
 }
 
 h1{
-   background-color: #464;
+   background-color: #744;
    color: #fff;
 }
 
@@ -12,7 +12,7 @@ h1{
    display: grid;
    grid-template-columns: auto auto;
    padding: 10px;
-   background-color: #454;
+   background-color: #544;
    width: 100%;
 }
  
@@ -24,6 +24,7 @@ h1{
 
 #dataDisplay{
    text-align: center;
+   vertical-align: middle;
    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
    font-size: large;
 }
@@ -37,12 +38,12 @@ path{
 #bar{
    background-color: #fff;
    border-radius: .5em;
-   border: #454 1em solid;
+   border: #544 1em solid;
 }
 .mainDiv{
    background-color: #fff;
    border-radius: .5em;
-   border: #454 1em solid;
+   border: #544 1em solid;
    display: flex;
 }
 #info{
