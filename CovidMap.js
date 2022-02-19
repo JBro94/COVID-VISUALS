@@ -75,11 +75,14 @@ svgMap.selectAll("path")
 	.attr("d", path)
 	.attr("class", (d) => d.id)
 	.attr('id', (d) => d.id + "stateVacc")
-	.attr("stroke", "#fff")
+	.attr("stroke", "#005")
 	.style("stroke-width", ".05em")
 	.style("fill", function(d){return ramp(d.properties.popPercent)})
-	.on("mouseover", function(d){d3.selectAll("#" + d.id + 'stateVacc').style("fill", "#ff0")})
-	.on("mouseout", function(d){d3.selectAll("#" + d.id + 'stateVacc').style("fill", function(d){return ramp(d.properties.popPercent)})});
+	.on("mouseover", function(d){d3.selectAll("." + d.id).style("fill", "#ff0")})
+	.on("mouseout", function(d){
+		d3.selectAll("#" + d.id + 'stateVacc').style("fill", function(d){return ramp(d.properties.popPercent)})
+		d3.selectAll('#' + d.id + 'barVacc').style('fill', '#00f')
+	});
 
 svgMap.append("g").attr("class", "stateId").selectAll("text").data(json.features).enter().append("svg:text").text(function(d){return d.id})
 										   .attr("x", function(d){
@@ -127,17 +130,7 @@ var legend = key.append("defs")
 
 	key.append("g").attr("class", "y axis").attr("transform", "translate(41,65)").call(yAxis)
 	});
-
-    let average_vacc = d3.mean(popVaccArray);
-    console.log(average_vacc)
-
-    let std_vacc = d3.deviation(popVaccArray);
-
-    console.log("standard deviation " + std_vacc);
     
-//console.log(popArray);
-var vacc_Array = [];
-var case_Values = [];
 const barDisplayWidth = 1000;
 const barDisplayHeight = 1000;
 const barMargin = {top: 20, left: 30, right: 30, bottom: 30};
@@ -172,10 +165,14 @@ var barOneDisplay = d3.select("#bar")
                                  .attr("y", (d) => barY((d.Fully_Vaccinated_Month12/d.Population)*100))
                                  .attr("height", d => barY(0) - barY((d.Fully_Vaccinated_Month12/d.Population)*100))
                                  .attr("width", barX.bandwidth())
-                                 .attr("class", function(d){return d.ID + 'barVacc'})
+                                 .attr("class", function(d){return d.ID})
 								 .attr('id', (d) => d.ID + 'barVacc')
-								 .on("mouseover", function(d){d3.selectAll("."+d.ID + 'barVacc').style("fill", "#ff0")})
-								 .on("mouseout", function(d){d3.selectAll("."+d.ID +'barVacc').style("fill", "#00f")});
+								 .on("mouseover", function(d){d3.selectAll("."+d.ID).style("fill", "#ff0")})
+								 .on("mouseout", function(d){
+									 d3.selectAll("#"+d.ID +'barVacc').style("fill", "#00f")
+									 d3.selectAll('#'+d.ID +'stateVacc').style('fill', function(d){return ramp(d.properties.popPercent)})
+								});
+	
     barOneDisplay.append('g').selectAll("text")
                  .data(data.sort((a, b) => d3.descending((a.Fully_Vaccinated_Month12/a.Population)*100, (b.Fully_Vaccinated_Month12/b.Population)*100)))
                  .enter()
@@ -218,79 +215,5 @@ var barOneDisplay = d3.select("#bar")
     barOneDisplay.append("g").call(d3.axisLeft(barY))
                                  .attr("transform", `translate(${barMargin.left}, 0)`)
                                  .attr("font-size", "15px");
-
 });
-			
-// // Load in my states data!
-// d3.csv("./StatePopData.csv", function(data) {
-// //color.domain([0,1,2]); // setting the range of the input data
-// var caseArray = [];
-// for(var d = 0; d < data.length; d++){
-// 	caseArray.push((parseInt(data[d].Total_Cases_Month12)/parseInt(data[d].Population))*100)
-// }
-
-
-// const caseDisplayWidth = 1000;
-// const caseDisplayHeight = 1000;
-// const caseMargin = {top: 20, left: 30, right: 30, bottom: 30};
-
-//     var barTwoDisplay = d3.select("#bar2")
-//                 .append("svg")
-//                 .attr("height", caseDisplayHeight - caseMargin.top - caseMargin.bottom)
-//                 .attr("width", caseDisplayWidth - caseMargin.right - caseMargin.left)
-//                 .attr("viewBox", [0, 0, caseDisplayWidth, caseDisplayHeight + 350]);
-    
-
-//         data.forEach(d => {
-//             d.Population = parseInt(d.Population);
-//             d.Fully_Vaccinated = parseInt(d.Fully_Vaccinated_Month12);
-//             d.Total_Cases = parseInt(d.Total_Cases_Month12);
-//         });
-
-        
-//         const caseX = d3.scaleBand().domain(d3.range(data.length))
-//                                 .range([caseMargin.left, caseDisplayWidth - caseMargin.left])
-//                                 .padding(.2);
-//         const caseY = d3.scaleLinear().domain([0, 28])
-//                                   .range([caseDisplayHeight - caseMargin.top, caseMargin.bottom]);
-
-//         barTwoDisplay.append("g").attr("fill", "rgb(255, 0, 0)")
-//                                  .selectAll("rect")
-//                                  .data(data.sort((a,b)=> d3.descending((a.Total_Cases_Month12/a.Population)*100, (b.Total_Cases_Month12/b.Population)*100)))
-//                                  .enter()
-//                                  .append("rect")
-//                                  .attr("x", (d, i) => caseX(i))
-//                                  .attr("y", (d) => caseY((d.Total_Cases_Month12/d.Population)*100))
-//                                  .attr("height", d => caseY(0) - caseY((d.Total_Cases_Month12/d.Population)*100))
-//                                  .attr("width", caseX.bandwidth())
-//                                  .attr("class", function(d){return d.ID + "Case"})
-// 								 .attr('id',function(d){return d.ID+'bar'})
-// 								 .on("mouseover", function(d){d3.selectAll("."+d.ID + "Case").style("fill", "#ff0")})
-// 								 .on("mouseout", function(d){d3.selectAll("."+d.ID + "Case").filter('#'+d.ID+'state').style("fill", '#f00')});
-
-//         barTwoDisplay.selectAll("text")
-//                      .data(data.sort((a, b) => d3.descending((a.Total_Cases_Month12/a.Population)*100, (b.Total_Cases_Month12/b.Population)*100)))
-//                      .enter()
-//                      .append("text")
-//                      .attr("x", (d, i) => caseX(i))
-//                      .attr("y", (d) => caseY((d.Total_Cases_Month12/d.Population)*100) - 3)
-//                      .text((d) => parseInt((d.Total_Cases_Month12/d.Population)*100));
-
-//         barTwoDisplay.append("g").attr("transform", `translate(0, ${caseDisplayHeight - caseMargin.bottom + 10})`)
-//                                  .call(d3.axisBottom(caseX).tickFormat(i => data[i].State))
-//                                  .attr("font-size", "15px")
-//                                  .selectAll("text")
-//                                  .style("text-anchor", "end")
-//                                  .attr("dx", "-.75em")
-//                                  .attr("dy", "-.25em")
-//                                  .attr("transform", "rotate(-65)");
-//         barTwoDisplay.append("g").call(d3.axisLeft(caseY).ticks(null, data.format))
-//                                  .attr("transform", `translate(${caseMargin.left}, 0)`)
-//                                  .attr("font-size", "15px");
-//     });
-
-
-// const margin_line = { top: 30, right: 20, bottom: 20, left: 30 };
-// var width3 = 960 - margin_line.left - margin_line.right;
-// var height3 = 600 - margin_line.top - margin_line.bottom;
 
