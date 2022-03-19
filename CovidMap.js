@@ -7,6 +7,7 @@ function popUpVacc(geography, data){
     return '<div class = hoverInfo><strong>' +geography.properties.name + ": " + data.Fully_Vaccinated + '</strong></div>';
 };
 
+
 // D3 Projection
 var projection = d3.geoAlbersUsa()
 				   .translate([width1/2, height1/2])    // translate to center of screen
@@ -50,8 +51,9 @@ for (var i = 0; i < data.length; i++) {
 	var dataState = data[i].State;
 
 	// Grab data value 
-	var dataValue = Math.floor((parseInt(data[i].Fully_Vaccinated_Month12)/parseInt(data[i].Population))*100)
-	var caseData = parseInt(data[i].Total_Cases_Month12)
+	var dataValue = Math.floor((parseInt(data[i].Fully_Vaccinated_Month12)/parseInt(data[i].Population))*100);
+	var caseData = parseInt(data[i].Total_Cases_Month12);
+	var vaxData = parseInt(data[i].Fully_Vaccinated_Month12);
 
 	// Find the corresponding state inside the GeoJSON
 	for (let j = 0; j < json.features.length; j++)  {
@@ -62,6 +64,7 @@ for (var i = 0; i < data.length; i++) {
 		// Copy the data value into the JSON
 		json.features[j].properties.popPercent = dataValue;
 		json.features[j].properties.caseNumber = caseData;
+		json.features[j].properties.vaxNumber = vaxData;
 
 		// Stop looking through the JSON
 		break;
@@ -83,7 +86,7 @@ svgMap.selectAll("path")
 	.on("mouseover", function(d){
 		d3.selectAll("." + d.id).style("fill", "#ff0")
 		d3.selectAll('#'+ d.id + 'caseNumber').style('fill', '#000')
-		document.getElementById('dataDisplay').innerHTML = d.properties.name + ": % of Population Vaccinated: " + d.properties.popPercent + "%, Cases: " + d.properties.caseNumber;
+		document.getElementById('dataDisplay').innerHTML = d.properties.name + ": % of Population Vaccinated: " + d.properties.popPercent + "%, No. Cases: " + d.properties.caseNumber;
 	})
 	.on("mouseout", function(d){
 		d3.selectAll("#" + d.id + 'stateVacc').style("fill", function(d){return ramp(d.properties.popPercent)})
@@ -161,7 +164,7 @@ var barOneDisplay = d3.select("#bar")
     const barX = d3.scaleBand().domain(d3.range(data.length))
                                 .range([barMargin.left, barDisplayWidth - barMargin.left])
                                 .padding(.2);
-    const barY = d3.scaleLinear().domain([0, 80])
+    const barY = d3.scaleLinear().domain([0, 100])
                                   .range([barDisplayHeight - barMargin.top, barMargin.bottom]);
 
     barOneDisplay.append("g").attr("fill", "rgb(0, 0, 255)")
@@ -178,7 +181,7 @@ var barOneDisplay = d3.select("#bar")
 								 .on("mouseover", function(d){
 									 d3.selectAll("."+d.ID).style("fill", "#ff0")
 									 d3.selectAll('#'+d.ID + 'caseNumber').style('fill', '#000')
-									 document.getElementById('dataDisplay').innerHTML = d.State + ": % of Population Vaccinated: " + Math.floor((d.Fully_Vaccinated_Month12/d.Population)*100) + "%, Cases: " + d.Total_Cases_Month12;
+									 document.getElementById('dataDisplay').innerHTML = d.State + ": No. Fully Vaccinated: " + d.Fully_Vaccinated_Month12 + ", No. Cases: " + d.Total_Cases_Month12;
 									})
 								 .on("mouseout", function(d){
 									 d3.selectAll("#"+d.ID +'barVacc').style("fill", "#00f")
@@ -207,7 +210,7 @@ var barOneDisplay = d3.select("#bar")
 				 .attr('id', (d) => d.ID + 'barCase')
 				 .on("mouseover", function(d){
 					 d3.selectAll("."+d.ID + 'barCase').style("fill", "#ff0")
-					 document.getElementById('dataDisplay').innerHTML = d.State + ": % of Population Vaccinated: " + Math.floor((d.Fully_Vaccinated_Month12/d.Population)*100) + "%, Cases: " + d.Total_Cases_Month12;
+					 document.getElementById('dataDisplay').innerHTML = d.State + ": No. Fully Vaccinated: " + d.Fully_Vaccinated_Month12 + ", No. Cases: " + d.Total_Cases_Month12;
 					})
 				 .on("mouseout", function(d){d3.selectAll("."+d.ID + 'barCase').style("fill", "#f00")});
 
@@ -233,6 +236,10 @@ var barOneDisplay = d3.select("#bar")
                                  .attr("transform", `translate(${barMargin.left}, 0)`)
                                  .attr("font-size", "15px");
 });
+
+// Use the settings object to change the theme
+
+
 
 // const lineMargin = {top: 25,
 // 					right: 45,

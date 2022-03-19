@@ -11,18 +11,20 @@
     
 </head>
 <body>
-    <h1>COVID-19 Data from the CDC As of January 2022</h1>
+    <h1>COVID-19 Data from the CDC As of March 17 2022</h1>
     <section class="visuals">
         <div class="mainDiv">
             <div id="map"></div>
-            <div id="info">
-                <p id="dataDisplay"></p>
-            </div>
         </div>
         <aside id="bar"></aside>
     </section>
+    <div id="info">
+        <p id="dataDisplay">This will display the percent of state that is vaccinated and the total recorded cases since Jan 2020</p>
+        <div class="slideContainer">
+            <input type="range" min="0" max="100" value="0" class="slider" id="myRange">
+        </div>
+    </div>
     <hr>
-
     <h1 id="footer">Created By: James Brokaw and Dr. Zhang at ISU</h1>
 </body>
 <script src="./CovidMap.js"></script>
