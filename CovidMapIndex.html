@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,10 +9,12 @@
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <link rel="stylesheet" href="./CovidMapStyling.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
-    
+
 </head>
+
 <body>
     <h1>COVID-19 Data from the CDC As of March 17 2022</h1>
+    <div id="demo"></div>
     <section class="visuals">
         <div class="mainDiv">
             <div id="map"></div>
@@ -19,6 +22,7 @@
         <aside id="bar"></aside>
     </section>
     <div id="info">
+        <p id="weekDisplay"> Choose a week </p>
         <p id="dataDisplay">This will display the percent of state that is vaccinated and the total recorded cases since Jan 2020</p>
         <p>Chose a date with the slider below to load specific data</p>
         <div class="slideContainer">
@@ -29,4 +33,5 @@
     <h1 id="footer">Created By: James Brokaw and Dr. Zhang at ISU</h1>
 </body>
 <script src="./CovidMap.js"></script>
+
 </html>
